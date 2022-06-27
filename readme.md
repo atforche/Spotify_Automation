@@ -10,7 +10,6 @@
 1. Create a program that can migrate all the songs in my Apple Music library over into Spotify
 
 ### To-Do
-1. Decide on a programming language
-2. Get connected to the Spotify API
-3. Create a test user and populate the data for testing
-4. Start developing
+1. Get connected to the Spotify API
+2. Create a test user and populate the data for testing
+3. Start developing
