@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+		<UserSecretsId>52f12033-1354-4a28-8539-7fa4811e8ea7</UserSecretsId>
+    </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.3" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.2" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="2.0.2" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="2.0.2" />
+		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.0.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="Properties\appsettings.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
+		</None>
+	</ItemGroup>
+
+</Project>

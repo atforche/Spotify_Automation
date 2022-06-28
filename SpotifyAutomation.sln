@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spotify_Automation", "Spotify_Automation\Spotify_Automation.csproj", "{C925E5F4-ED88-4B9D-865A-EDE054A4CA52}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpotifyAutomation", "SpotifyAutomation\SpotifyAutomation.csproj", "{C925E5F4-ED88-4B9D-865A-EDE054A4CA52}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
