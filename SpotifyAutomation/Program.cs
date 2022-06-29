@@ -1,43 +1,33 @@
-﻿using System;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using SpotifyAutomation.Models;
 
 namespace SpotifyAutomation;
 
-public class Program
+public static class Program
 {
-
-    public static IConfigurationRoot Configuration { get; set; }
+    private static IConfigurationRoot? Configuration { get; set; }
 
     public static void Main(string[] args)
     {
+        // Determine if we're in a development environment (should always be true for this project)
         var devEnvironmentVariable = Environment.GetEnvironmentVariable("NETCODE_ENVIRONMENT");
-
         var isDevelopment = string.IsNullOrEmpty(devEnvironmentVariable) ||
-            devEnvironmentVariable.ToLower() == "development";
+                            devEnvironmentVariable.ToLower() == "development";
 
+        // Set up the configuration and add the User Secrets to the config
         var builder = new ConfigurationBuilder();
         builder.AddJsonFile("Properties\\appsettings.json", optional: false, reloadOnChange: true);
-
         if (isDevelopment)
         {
             builder.AddUserSecrets<SpotifyApiConfiguration>();
         }
-
         Configuration = builder.Build();
 
-        IServiceCollection services = new ServiceCollection();
-
-        services
-            .Configure<SpotifyApiConfiguration>(Configuration.GetSection("Spotify"))
-            .AddOptions()
-            .AddLogging()
-            .AddSingleton<ISecretRevealer, SecretRevealer>()
-            .BuildServiceProvider();
-
-        var serviceProvider = services.BuildServiceProvider();
+        // Create and bind an instance of SpotifyApiConfiguration to the Configuration section
+        var spotifyApiConfig = new SpotifyApiConfiguration();
+        Configuration.GetSection(SpotifyApiConfiguration.Position).Bind(spotifyApiConfig);
         
-        var revealer = serviceProvider.GetService<ISecretRevealer>();
-        revealer.Reveal();        
+        // Test printing 
+        Console.WriteLine(spotifyApiConfig.ClientId);
     }
 }

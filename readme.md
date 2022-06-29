@@ -13,3 +13,7 @@
 1. Get connected to the Spotify API
 2. Create a test user and populate the data for testing
 3. Start developing
+
+### Resources Used
+1. .NET User Secrets - https://twil.io/blog/2018/05/user-secrets-in-a-net-core-console-app.html
+2. Options Pattern in .NET Core - https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/options?view=aspnetcore-6.0
