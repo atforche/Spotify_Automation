@@ -29,5 +29,6 @@ public static class Program
         
         // Test printing 
         Console.WriteLine(spotifyApiConfig.ClientId);
+        Console.WriteLine(spotifyApiConfig.ClientSecret);
     }
 }
