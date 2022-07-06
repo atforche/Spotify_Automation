@@ -4,8 +4,7 @@ using SpotifyAuthenticationWebAPI.Models;
 namespace SpotifyAutomation;
 
 public static class Program
-{
-    private static IConfigurationRoot? Configuration { get; set; }
+{ 
 
     public static void Main(string[] args)
     {
@@ -14,5 +13,9 @@ public static class Program
         // Test printing 
         Console.WriteLine(authenticationRequest.ClientId);
         Console.WriteLine(authenticationRequest.ClientSecret);
+
+        var workingDirectory = Environment.CurrentDirectory;
+        var projectDirectory = Directory.GetParent(workingDirectory)?.Parent?.Parent?.FullName;
+        Console.WriteLine(projectDirectory);
     }
 }

@@ -1,0 +1,14 @@
+﻿<Project>
+  
+  <PropertyGroup>
+
+    <!-- Set the build output directories -->
+    <ProjectDirectory>C:\Code_Projects\2022\Spotify_Automation\run</ProjectDirectory>
+    <BaseOutputPath>$(ProjectDirectory)\$(MSBuildProjectName)\bin</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(ProjectDirectory)\$(MSBuildProjectName)\bin\obj</BaseIntermediateOutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+
+  </PropertyGroup>
+
+</Project>
