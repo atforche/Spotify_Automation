@@ -10,7 +10,7 @@ namespace SpotifyAuthenticationWebAPI.Models;
 public class SpotifyAuthenticationRequest
 {
 
-    #region properties
+    #region Properties
 
     /// <summary>
     /// URL to redirect the User to after they provide login credentials
