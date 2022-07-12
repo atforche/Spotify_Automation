@@ -20,14 +20,24 @@ public static class Program
     /// </summary>
     private static Process? apiProcess;
 
+    /// <summary>
+    /// HttpClient for making requests to the API
+    /// </summary>
+    private static HttpClient client = new HttpClient();
+
     #endregion
 
-    public static void Main(string[] args)
+    public async static Task Main(string[] args)
     {
         try
         {
+            client.BaseAddress = new Uri("http://localhost:5000/");
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
             LaunchAPI();
-            Thread.Sleep(10000);
+            await ConnectToSpotifyApi();
         }
         finally
         {
@@ -51,6 +61,18 @@ public static class Program
         startInfo.WindowStyle = ProcessWindowStyle.Hidden;
         startInfo.CreateNoWindow = true;
         apiProcess = Process.Start(startInfo);
+    }
+
+    /// <summary>
+    /// Uses the Authentication API to connect to the Spotify API
+    /// </summary>
+    public static async Task<int> ConnectToSpotifyApi()
+    {
+        var statusRequest = new StatusRequest();
+        var statusResponse = await statusRequest.PostRequest(client);
+        Console.WriteLine(statusResponse);
+
+        return 0;
     }
 
     /// <summary>

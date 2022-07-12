@@ -7,7 +7,7 @@ namespace SpotifyAuthenticationWebAPI.Models;
 /// Model representing information needed to connect to and utilize the Spotify API.
 /// Populated using .NET User Secrets
 /// </summary>
-public class SpotifyAuthenticationRequest
+public class AuthenticationRequest
 {
 
     #region Properties
@@ -39,14 +39,14 @@ public class SpotifyAuthenticationRequest
 
 	#endregion
 
-	public SpotifyAuthenticationRequest()
+	public AuthenticationRequest()
     {
 		// Create the random state string for this authentication request
 		State = GenerateState();
 
 		// Get the Client ID and Secret from the local user secrets
 		var builder = new ConfigurationBuilder();
-		builder.AddUserSecrets<SpotifyAuthenticationRequest>();
+		builder.AddUserSecrets<AuthenticationRequest>();
 		var configuration = builder.Build();
 
 		configuration.GetSection(ConfigurationPosition).Bind(this);

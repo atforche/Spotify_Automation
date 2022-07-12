@@ -13,11 +13,5 @@ namespace SpotifyAuthenticationWebAPI.Controllers
         {
             _logger = logger;
         }
-
-        [HttpGet("/status")]
-        public string GetServiceStatus()
-        {
-            return "active";
-        }
     }
 }
