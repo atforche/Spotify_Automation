@@ -6,8 +6,6 @@ namespace SpotifyAutomation;
 public static class Program
 {
 
-    #region Properties
-
     // Store which configuration the application is running in
     #if DEBUG
         private static string Mode = "Debug";
@@ -25,17 +23,10 @@ public static class Program
     /// </summary>
     private static HttpClient client = new HttpClient();
 
-    #endregion
-
     public async static Task Main(string[] args)
     {
         try
         {
-            client.BaseAddress = new Uri("http://localhost:5000/");
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(
-                new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-
             LaunchAPI();
             await ConnectToSpotifyApi();
         }
@@ -45,8 +36,9 @@ public static class Program
         }
     }
 
+
     /// <summary>
-    /// Opens a separate process to run the Authentication API
+    /// Opens a separate process to run the Authentication API and initializes an HTTPClient to connect to the local API
     /// </summary>
     public static void LaunchAPI()
     {
@@ -61,6 +53,13 @@ public static class Program
         startInfo.WindowStyle = ProcessWindowStyle.Hidden;
         startInfo.CreateNoWindow = true;
         apiProcess = Process.Start(startInfo);
+
+        // Initialize the HTTP client we'll use to connect
+        client.BaseAddress = new Uri("http://localhost:5000/");
+        client.DefaultRequestHeaders.Accept.Clear();
+        client.DefaultRequestHeaders.Accept.Add(
+            new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+        client.Timeout = TimeSpan.FromSeconds(300);
     }
 
     /// <summary>
@@ -68,9 +67,16 @@ public static class Program
     /// </summary>
     public static async Task<int> ConnectToSpotifyApi()
     {
+        // Verify that the API is up and running
         var statusRequest = new StatusRequest();
-        var statusResponse = await statusRequest.PostRequest(client);
-        Console.WriteLine(statusResponse);
+        StatusResponse response = await statusRequest.GetRequest(client);
+        if (!response.Status)
+        {
+            throw new Exception("Unable to connect to local API");
+        }
+
+        // Send our connection request to the API
+
 
         return 0;
     }

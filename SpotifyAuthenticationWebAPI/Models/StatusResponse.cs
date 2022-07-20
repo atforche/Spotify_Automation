@@ -8,17 +8,13 @@ namespace SpotifyAuthenticationWebAPI.Models;
 /// </summary>
 public class StatusResponse
 {
-
-	#region Properties
-
 	/// <summary>
 	/// The Status response from the API server
 	/// </summary>
-	public string Status { get; set; } = "Not Set";
+	public bool Status { get; set; } = false;
 
-	#endregion
-
-	public StatusResponse() { }
-
-
+	public StatusResponse(bool success) 
+	{
+		Status = success;
+	}
 }

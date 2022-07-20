@@ -15,10 +15,10 @@ namespace SpotifyAuthenticationWebAPI.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Simple status endpoint to ensure that the local API is up and running
+        /// </summary>
         [HttpGet("/status")]
-        public string GetServiceStatus()
-        {
-            return "active";
-        }
+        public void GetServiceStatus() {}
     }
 }
