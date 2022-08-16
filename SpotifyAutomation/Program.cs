@@ -69,14 +69,16 @@ public static class Program
     {
         // Verify that the API is up and running
         var statusRequest = new StatusRequest();
-        StatusResponse response = await statusRequest.GetRequest(client);
-        if (!response.Status)
+        StatusResponse statusResponse = await statusRequest.SendGetRequest(client);
+        if (!statusResponse.Status)
         {
             throw new Exception("Unable to connect to local API");
         }
 
         // Send our connection request to the API
-
+        var authRequest = new AuthorizationCodeRequest();
+        AuthorizationCodeResponse authResponse = await authRequest.SendPostRequest(client);
+        Console.WriteLine(authResponse.UserAuthorizationCode + " " + authResponse.State);
 
         return 0;
     }

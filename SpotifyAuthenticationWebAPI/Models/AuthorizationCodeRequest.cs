@@ -1,5 +1,7 @@
 ﻿using System.Security.Cryptography;
+using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
 
 namespace SpotifyAuthenticationWebAPI.Models;
 
@@ -9,12 +11,6 @@ namespace SpotifyAuthenticationWebAPI.Models;
 /// </summary>
 public class AuthorizationCodeRequest
 {
-
-	/// <summary>
-	/// Randomly generated state string to protect against cross-site request forgery
-	/// </summary>
-	public string State { get; }
-
 	/// <summary>
 	/// Constructs an AuthenticationRequest object
 	/// </summary>
@@ -31,19 +27,53 @@ public class AuthorizationCodeRequest
     }
 
 	/// <summary>
-	/// URL to redirect the User to after they provide login credentials
+	/// Sends a GET request to the API endpoint for this request
 	/// </summary>
-	private const string RedirectUri = "http://localhost:5000/authentication/authentication_response";
+	/// <param name="client"></param>
+	/// <returns></returns>
+	public async Task<AuthorizationCodeResponse> SendPostRequest(HttpClient client)
+    {
+		try
+        {
+			// Create the request
+			var request = new HttpRequestMessage(HttpMethod.Post, endPoint);
+
+			// Serialize the request object and add it to the request
+			var json = JsonSerializer.Serialize(this);
+			request.Content = new ByteArrayContent(Encoding.UTF8.GetBytes(json));
+			request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+			// Send the request and wait for a response
+			HttpResponseMessage response = await client.SendAsync(request);
+			if (!response.IsSuccessStatusCode)
+            {
+				return new AuthorizationCodeResponse(response.StatusCode.ToString(), 
+					await response.Content.ReadAsStringAsync());
+            }
+
+			// Read the response object from the HTTP response
+			var authResponse = await response.Content.ReadFromJsonAsync(typeof(AuthorizationCodeResponse)) as AuthorizationCodeResponse;
+
+			// Verify that the response came through correctly
+			if (authResponse == null)
+            {
+				return new AuthorizationCodeResponse(response.StatusCode.ToString(),
+					await response.Content.ReadAsStringAsync());
+            }
+			return authResponse;
+
+        }
+        catch (Exception e)
+        {
+			// TODO: add some code here to handle errors and return info to the caller (really not sure where we'd hit this case)
+			return new AuthorizationCodeResponse("Something's", "Very broken");
+        }
+    }
 
 	/// <summary>
-	/// Authorization scopes needed on the Spotify API
+	/// API Endpoint
 	/// </summary>
-	private const string Scopes = "playlist-modify-public";
-
-	/// <summary>
-	/// Position of the model in the User Secrets Configuration dictionary
-	/// </summary>
-	private static string ConfigurationPosition = "Spotify";
+	private const string endPoint = $"authorize";
 
 	/// <summary>
 	/// Client ID for our application
@@ -51,9 +81,29 @@ public class AuthorizationCodeRequest
 	private string ClientId { get; set; } = "";
 
 	/// <summary>
-	/// Client secret for our application
+	/// Response type to get from the Spotify API
 	/// </summary>
-	private string ClientSecret { get; set; } = "";
+	private const string ResponseType = "code";
+
+	/// <summary>
+	/// URL to redirect the User to after they provide login credentials
+	/// </summary>
+	private const string RedirectUri = "http://localhost:5000/authentication/authentication_response";
+
+	/// <summary>
+	/// Randomly generated state string to protect against cross-site request forgery
+	/// </summary>
+	public string State { get; }
+
+	/// <summary>
+	/// Authorization scopes needed on the Spotify API
+	/// </summary>
+	private const string Scope = "playlist-modify-public";
+
+	/// <summary>
+	/// Position of the model in the User Secrets Configuration dictionary
+	/// </summary>
+	private static string ConfigurationPosition = "Spotify";
 
 	/// <summary>
 	/// Length of the State string provided to the Spotify API

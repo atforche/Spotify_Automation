@@ -6,18 +6,15 @@
 /// </summary>
 public class StatusRequest
 {
-
 	/// <summary>
-	/// API Endpoint 
+	/// Constructs a StatusRequest object
 	/// </summary>
-	const string endPoint = $"status";
-
 	public StatusRequest() { }
 
 	/// <summary>
-	/// Sends a GET request to the API
+	/// Sends a GET request to the API endpoint for this request
 	/// </summary>
-	public async Task<StatusResponse> GetRequest(HttpClient client)
+	public async Task<StatusResponse> SendGetRequest(HttpClient client)
     {
 		try
         {
@@ -33,4 +30,9 @@ public class StatusRequest
 			return new StatusResponse(false);
         }
     }
+
+	/// <summary>
+	/// API Endpoint 
+	/// </summary>
+	private const string endPoint = $"status";
 }

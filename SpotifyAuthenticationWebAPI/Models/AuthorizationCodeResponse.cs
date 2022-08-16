@@ -19,6 +19,8 @@ public class AuthorizationCodeResponse
 	/// </summary>
 	public string State { get; }
 
+	// TODO: add some properties to store error information if the request fails
+
 	/// <summary>
 	/// Constructs an AuthorizationCodeResponse object
 	/// </summary>
