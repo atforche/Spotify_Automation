@@ -5,4 +5,5 @@ riderModule.iml
 /_ReSharper.Caches/
 /.idea
 /.vs
-/SpotifyAuthenticationWebAPI/SpotifyAuthenticationWebAPI.csproj.user
+/SpotifyWebAPI/SpotifyWebAPI.csproj.user
+/logs

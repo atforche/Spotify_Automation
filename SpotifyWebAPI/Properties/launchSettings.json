@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "SpotifyAuthenticationWebAPI": {
+    "SpotifyWebAPI": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

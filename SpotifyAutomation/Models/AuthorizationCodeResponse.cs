@@ -1,16 +1,13 @@
-﻿using System.Security.Cryptography;
-using System.Text;
-
-namespace SpotifyAuthenticationWebAPI.Models;
+﻿namespace SpotifyAutomation.Models;
 
 /// <summary>
-/// Model representing the response that Spotify will return to us after getting a user authorization code to an account
+/// Model representing the information that Spotify's API will repond with after requesting a user authorization code
 /// </summary>
 public class AuthorizationCodeResponse
 {
 
 	/// <summary>
-	/// String from the SpotifyAPI that will allow us to get an access token for the users account
+	/// String from the Spotify API that will allow us to get an access token for the users account
 	/// </summary>
 	public string UserAuthorizationCode { get; }
 
@@ -18,8 +15,6 @@ public class AuthorizationCodeResponse
 	/// Randomly generated state string to protect against cross-site request forgery
 	/// </summary>
 	public string State { get; }
-
-	// TODO: add some properties to store error information if the request fails
 
 	/// <summary>
 	/// Constructs an AuthorizationCodeResponse object

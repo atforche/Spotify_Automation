@@ -1,4 +1,4 @@
-﻿namespace SpotifyAuthenticationWebAPI.Models;
+﻿namespace SpotifyAutomation.Models;
 
 /// <summary>
 /// Model representing information needed to connect to and utilize the Spotify API.

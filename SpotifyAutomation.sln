@@ -5,7 +5,7 @@ VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpotifyAutomation", "SpotifyAutomation\SpotifyAutomation.csproj", "{C925E5F4-ED88-4B9D-865A-EDE054A4CA52}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpotifyAuthenticationWebAPI", "SpotifyAuthenticationWebAPI\SpotifyAuthenticationWebAPI.csproj", "{512C605E-7688-42BF-BFB1-4697B4FD6C59}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpotifyWebAPI", "SpotifyWebAPI\SpotifyWebAPI.csproj", "{512C605E-7688-42BF-BFB1-4697B4FD6C59}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
