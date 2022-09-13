@@ -10,34 +10,33 @@ namespace SpotifyAutomation.Models;
 
 /// <summary>
 /// Model representing information needed to request a user authorization code from the Spotify API.
-/// ClientID is populated using .NET User Secrets
 /// </summary>
 public class AuthorizationCodeRequest
 {
-	/// <summary>
-	/// API Endpoint
-	/// </summary>
-	private const string endPoint = $"authorize";
-
 	/// <summary>
 	/// Client ID for our application
 	/// </summary>
 	private string ClientId { get; set; } = "";
 
 	/// <summary>
-	/// Response type to get from the Spotify API
+	/// Local API Endpoint
 	/// </summary>
-	private const string ResponseType = "code";
+	private static string endPoint = $"/authorize";
 
 	/// <summary>
-	/// URL to redirect the "User" to after they provide login credentials
+	/// Response type to get from the Spotify API
 	/// </summary>
-	private const string RedirectUri = "http://localhost:5000/authentication/authentication_response";
+	private static string ResponseType = "code";
+
+	/// <summary>
+	/// URL to redirect the User to after they provide login credentials
+	/// </summary>
+	private static string RedirectUri = $"{GlobalConstants.BaseApiUrl}/authentication/authentication_response";
 
 	/// <summary>
 	/// Authorization scopes needed on the Spotify API
 	/// </summary>
-	private const string Scope = "playlist-modify-public";
+	private static string Scope = "playlist-modify-public";
 
 	/// <summary>
 	/// Section of the model in the User Secrets JSON dictionary
@@ -102,7 +101,7 @@ public class AuthorizationCodeRequest
 	/// Sends a POST request to the API endpoint for this request
 	/// </summary>
 	/// <param name="client"></param>
-	/// <returns>an AuthorizationCodeResponse with the user authentication code, or null if an error occurs</returns>
+	/// <returns>a valid AuthorizationCodeResponse with the user authentication code, or null if any error occurs</returns>
 	public async Task<AuthorizationCodeResponse?> SendPostRequest(HttpClient client)
     {
 		try
@@ -127,7 +126,6 @@ public class AuthorizationCodeRequest
 			// Read the response object from the HTTP response
 			var authResponse = await response.Content.ReadFromJsonAsync(typeof(AuthorizationCodeResponse)) as AuthorizationCodeResponse;
 			return authResponse;
-
         }
         catch (Exception error)
         {

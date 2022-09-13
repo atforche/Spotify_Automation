@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NLog;
 
 namespace SpotifyWebAPI.Controllers;
 
@@ -6,12 +7,18 @@ namespace SpotifyWebAPI.Controllers;
 [Route($"api/[controller]")]
 public class StatusController : ControllerBase
 {
+    /// <summary>
+    /// Configure the logger for this class
+    /// </summary>
+    private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-    private readonly ILogger<AuthenticationController> _logger;
-
-    public StatusController(ILogger<AuthenticationController> logger)
+    /// <summary>
+    /// Constructs a StatusController object
+    /// </summary>
+    /// <param name="logger"></param>
+    public StatusController()
     {
-        _logger = logger;
+        Logger.Info("Status Controller initialized successfully");
     }
 
     /// <summary>

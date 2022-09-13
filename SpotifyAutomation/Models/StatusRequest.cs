@@ -1,11 +1,15 @@
 ﻿namespace SpotifyAutomation.Models;
 
 /// <summary>
-/// Model representing information needed to connect to and utilize the Spotify API.
-/// Populated using .NET User Secrets
+/// Model representing information needed ping the local API and establish a random state
 /// </summary>
 public class StatusRequest
 {
+	/// <summary>
+	/// API Endpoint 
+	/// </summary>
+	private const string endPoint = $"/status";
+
 	/// <summary>
 	/// Constructs a StatusRequest object
 	/// </summary>
@@ -30,9 +34,4 @@ public class StatusRequest
 			return new StatusResponse(false);
         }
     }
-
-	/// <summary>
-	/// API Endpoint 
-	/// </summary>
-	private const string endPoint = $"status";
 }

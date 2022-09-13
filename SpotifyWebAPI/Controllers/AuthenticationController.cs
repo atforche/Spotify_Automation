@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using NLog;
+
 using SpotifyAutomation.Models;
 
 namespace SpotifyWebAPI.Controllers
@@ -18,7 +19,7 @@ namespace SpotifyWebAPI.Controllers
         /// </summary>
         public AuthenticationController() 
         {
-            Logger.Info($"Authentication Controller initialized successfully");
+            Logger.Info("Authentication Controller initialized successfully");
         }
 
         /// <summary>

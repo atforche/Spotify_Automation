@@ -1,23 +1,12 @@
 ﻿using NLog;
 using System.Diagnostics;
+
 using SpotifyAutomation.Models;
 
 namespace SpotifyAutomation;
 
 public static class Program
 {
-    // Store which configuration the application is running in
-    #if DEBUG 
-        private static string Mode = "Debug";
-    #else
-        private static string Mode = "Release";
-    #endif
-
-    /// <summary>
-    /// Name of the API project, used to reference its executable
-    /// </summary>
-    private const string ApiProjectName = "SpotifyWebAPI";
-
     /// <summary>
     /// Process object that the Authentication API will be running on
     /// </summary>
@@ -57,20 +46,15 @@ public static class Program
     /// </summary>
     public static void LaunchAPI()
     {
-        // Determine the directory that the API .exe is located in
-        var projectDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.FullName;
-        var apiExeDirectory = $"{projectDirectory}\\{ApiProjectName}\\bin\\{Mode}";
-        Console.WriteLine(apiExeDirectory);
-
         // Start up the API
         var startInfo = new ProcessStartInfo();
-        startInfo.FileName = $"{apiExeDirectory}\\{ApiProjectName}.exe";
+        startInfo.FileName = $"{GlobalConstants.ApiExeDirectory}\\{GlobalConstants.ApiProjectName}.exe";
         startInfo.WindowStyle = ProcessWindowStyle.Hidden;
         startInfo.CreateNoWindow = true;
         apiProcess = Process.Start(startInfo);
 
         // Initialize the HTTP client we'll use to connect
-        client.BaseAddress = new Uri("http://localhost:5000/");
+        client.BaseAddress = new Uri(GlobalConstants.BaseApiUrl);
         client.DefaultRequestHeaders.Accept.Clear();
         client.DefaultRequestHeaders.Accept.Add(
             new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
@@ -82,25 +66,22 @@ public static class Program
     /// </summary>
     public static async Task<int> ConnectToSpotifyApi()
     {
-        // Verify that the API is up and running
+        // Verify that the local API is up and running
         var statusRequest = new StatusRequest();
         StatusResponse statusResponse = await statusRequest.SendGetRequest(client);
-        if (!statusResponse.Status)
+        if (!StatusResponse.Validate(statusResponse))
         {
             var exception = new Exception("Unable to connect to local API");
             Logger.Error(exception);
             throw exception;
         }
 
-        // Generate a new random state string for this application run
-
-
-        // Send our connection request to the API
+        // Send our connection request to the Spotify API
         var authRequest = new AuthorizationCodeRequest();
         AuthorizationCodeResponse? authResponse = await authRequest.SendPostRequest(client);
 
         // Verify that we got a valid response back from the API
-        if (authResponse == null || authRequest.State != authResponse.State)
+        if (!AuthorizationCodeResponse.Validate(authResponse, authRequest.State))
         {
             var exception = new Exception($"Invalid response received. Request state: {authRequest.State}");
             Logger.Error(exception);
