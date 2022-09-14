@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using NLog;
 
+using SpotifyAutomation;
 using SpotifyAutomation.Models;
 
 namespace SpotifyWebAPI.Controllers
@@ -29,10 +30,17 @@ namespace SpotifyWebAPI.Controllers
         /// the authorization request</param>
         /// <returns>An AuthorizationCodeResponse object containing the authorization code or error message</returns>
         [HttpPost("/authorize")]
-        public ActionResult<AuthorizationCodeResponse> GetAuthorizationCode(AuthorizationCodeRequest request)
+        public ActionResult<AuthorizationCodeResponse?> GetAuthorizationCode(AuthorizationCodeRequest request)
         {
+            // Verify that the request object received is valid
             Logger.Info($"Received an Authorization Code Request with state: '{request.State}'");
+            if (!AuthorizationCodeRequest.Validate(request, GlobalConstants.State))
+            {
+                Logger.Error("Received request with incorrect random state");
+                return new EmptyResult();
+            }
 
+            // Request an authorization code from the Spotify API and return the result to the client
             var response = new AuthorizationCodeResponse("Hello There", request.State);
             Logger.Info($"Sending an Authorization Code Response with state: '{response.State}'");
             return response;

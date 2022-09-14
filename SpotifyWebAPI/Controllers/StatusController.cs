@@ -12,11 +12,11 @@ public class StatusController : ControllerBase
     /// </summary>
     private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-    /// <summary>
-    /// Constructs a StatusController object
-    /// </summary>
-    /// <param name="logger"></param>
-    public StatusController()
+	/// <summary>
+	/// Constructs a StatusController object
+	/// </summary>
+	/// <param name="logger"></param>
+	public StatusController()
     {
         Logger.Info("Status Controller initialized successfully");
     }

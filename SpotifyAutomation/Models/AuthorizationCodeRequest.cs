@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using NLog;
-using System.Security.Cryptography;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
@@ -44,38 +43,9 @@ public class AuthorizationCodeRequest
 	private static string ConfigurationSection = "Spotify";
 
 	/// <summary>
-	/// Length of the State string provided to the Spotify API
-	/// </summary>
-	private static int StateLength = 16;
-
-	/// <summary>
 	/// Logger specific to this class
 	/// </summary>
 	private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
-	/// <summary>
-	/// Generates a random state string for this authentication request to use
-	/// </summary>
-	private static string GenerateState()
-	{
-		char[] chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".ToCharArray();
-		byte[] data = new byte[4 * StateLength];
-
-		using (var crypto = RandomNumberGenerator.Create())
-		{
-			crypto.GetBytes(data);
-		}
-
-		StringBuilder builder = new StringBuilder();
-		for (int i = 0; i < StateLength; i++)
-		{
-			var randomNumber = BitConverter.ToUInt32(data, i * 4);
-			var index = randomNumber % chars.Length;
-			builder.Append(chars[index]);
-		}
-
-		return builder.ToString();
-	}
 
 	/// <summary>
 	/// Randomly generated state string to protect against cross-site request forgery
@@ -88,7 +58,7 @@ public class AuthorizationCodeRequest
 	public AuthorizationCodeRequest()
     {
 		// Generate the random state for this request
-		State = GenerateState();
+		State = GlobalConstants.State;
 
 		// Get the Client ID and Secret from the local user secrets
 		var builder = new ConfigurationBuilder();
@@ -133,4 +103,11 @@ public class AuthorizationCodeRequest
 			return null;
         }
     }
+
+	/// <summary>
+	/// Validates that a given request object is valid
+	/// </summary>
+	/// <param name="request">The AuthorizationCodeRequest object passed to the API</param>
+	/// <returns>True if the request object is valid, false otherwise</returns>
+	public static bool Validate(AuthorizationCodeRequest? request, string expectedState) => request != null && request.State == expectedState;
 }

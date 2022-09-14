@@ -1,5 +1,7 @@
 ﻿using NLog;
 using System.Diagnostics;
+using System.Security.Cryptography;
+using System.Text;
 
 using SpotifyAutomation.Models;
 
@@ -32,6 +34,7 @@ public static class Program
         try
         {
             LaunchAPI();
+            GlobalConstants.State = GenerateRandomState(GlobalConstants.StateLength);
             await ConnectToSpotifyApi();
         }
         finally
@@ -62,13 +65,39 @@ public static class Program
     }
 
     /// <summary>
+    /// Generates a random state string for this application run to use
+    /// </summary>
+    /// <param name="length">Length of random state string to generate</param>
+    /// <returns>The randomly generated state string</returns>
+    private static string GenerateRandomState(int length)
+    {
+        char[] chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".ToCharArray();
+        byte[] data = new byte[4 * length];
+
+        using (var crypto = RandomNumberGenerator.Create())
+        {
+            crypto.GetBytes(data);
+        }
+
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < length; i++)
+        {
+            var randomNumber = BitConverter.ToUInt32(data, i * 4);
+            var index = randomNumber % chars.Length;
+            builder.Append(chars[index]);
+        }
+
+        return builder.ToString();
+    }
+
+    /// <summary>
     /// Uses the Authentication API to connect to the Spotify API
     /// </summary>
     public static async Task<int> ConnectToSpotifyApi()
     {
         // Verify that the local API is up and running
         var statusRequest = new StatusRequest();
-        StatusResponse statusResponse = await statusRequest.SendGetRequest(client);
+        StatusResponse? statusResponse = await statusRequest.SendGetRequest(client);
         if (!StatusResponse.Validate(statusResponse))
         {
             var exception = new Exception("Unable to connect to local API");
@@ -81,7 +110,7 @@ public static class Program
         AuthorizationCodeResponse? authResponse = await authRequest.SendPostRequest(client);
 
         // Verify that we got a valid response back from the API
-        if (!AuthorizationCodeResponse.Validate(authResponse, authRequest.State))
+        if (!AuthorizationCodeResponse.Validate(authResponse, GlobalConstants.State))
         {
             var exception = new Exception($"Invalid response received. Request state: {authRequest.State}");
             Logger.Error(exception);

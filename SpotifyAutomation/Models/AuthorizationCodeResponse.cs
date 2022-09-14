@@ -31,7 +31,7 @@ public class AuthorizationCodeResponse
 	/// <summary>
 	/// Validates that a given response object is valid
 	/// </summary>
-	/// <param name="response">The AuthorizationCodeResponse object returns by the API</param>
+	/// <param name="response">The AuthorizationCodeResponse object returned by the API</param>
 	/// <param name="expectedState">The random state string expected by this request</param>
 	/// <returns>True if the response object is valid, false otherwise</returns>
 	public static bool Validate([NotNullWhen(true)] AuthorizationCodeResponse? response, string expectedState) => response != null && response.State == expectedState;

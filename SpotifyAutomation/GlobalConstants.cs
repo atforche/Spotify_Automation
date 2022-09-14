@@ -38,4 +38,24 @@ public static class GlobalConstants
     /// Fully qualified path of the base project directory
     /// </summary>
     public static string ProjectDirectory => Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.FullName ?? throw new Exception("Unable to find base project directory");
+
+    /// <summary>
+    /// Randomly generated state that is used validate messages sent to both the local and Spotify APIs
+    /// </summary>
+    private static string? _state = null;
+
+    /// <summary>
+    /// Public property for accessing the random state string. Throws an error if the state is retrieved before being set.
+    /// Throws an error if the state has previously been set and another method attempts to overwrite it.
+    /// </summary>
+    public static string State
+    {
+        get => _state ?? throw new Exception("Random state has not been set yet. Unable to retrieve state");
+        set => _state = _state == null ? value : throw new Exception("Random state has already been set. Unable to set state to new value");
+    }
+
+    /// <summary>
+    /// Length of the random State string included on all API requests
+    /// </summary>
+    public static int StateLength = 24;
 }

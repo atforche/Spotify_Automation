@@ -1,7 +1,7 @@
 ﻿namespace SpotifyAutomation.Models;
 
 /// <summary>
-/// Model representing information needed ping the local API and establish a random state
+/// Model representing information needed ping the local API
 /// </summary>
 public class StatusRequest
 {
@@ -34,4 +34,10 @@ public class StatusRequest
 			return new StatusResponse(false);
         }
     }
+
+	/// <summary>
+	/// Validates that a given request object is valid
+	/// </summary>
+	/// <returns>Always true in this case</returns>
+	public static bool Validate(StatusRequest request, string _) => true;
 }
