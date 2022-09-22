@@ -1,4 +1,4 @@
-﻿namespace SpotifyAutomation;
+﻿namespace Common;
 
 /// <summary>
 /// Static class containing global constants that are shared across projects

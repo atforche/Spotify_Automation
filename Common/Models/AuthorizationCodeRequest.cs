@@ -5,7 +5,7 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 
-namespace SpotifyAutomation.Models;
+namespace Common.Models;
 
 /// <summary>
 /// Model representing information needed to request a user authorization code from the Spotify API.
@@ -30,7 +30,7 @@ public class AuthorizationCodeRequest
 	/// <summary>
 	/// URL to redirect the User to after they provide login credentials
 	/// </summary>
-	private static string RedirectUri = $"{GlobalConstants.BaseApiUrl}/authentication/authentication_response";
+	private static string RedirectUri = $"{GlobalConstants.BaseApiUrl}/authorize/authTokenResponse";
 
 	/// <summary>
 	/// Authorization scopes needed on the Spotify API
@@ -57,7 +57,7 @@ public class AuthorizationCodeRequest
 	/// </summary>
 	public AuthorizationCodeRequest()
     {
-		// Generate the random state for this request
+		// Grab the random state established in the initial handshake
 		State = GlobalConstants.State;
 
 		// Get the Client ID and Secret from the local user secrets

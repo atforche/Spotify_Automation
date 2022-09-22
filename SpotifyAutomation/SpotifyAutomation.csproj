@@ -7,10 +7,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    
-    <!-- ID for .NET User Secrets -->
-	  <UserSecretsId>52f12033-1354-4a28-8539-7fa4811e8ea7</UserSecretsId>
-    
+        
   </PropertyGroup>
 
   <!-- Remove any existing NLog.config content from the build directory -->
@@ -31,6 +28,11 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
     <PackageReference Include="NLog" Version="5.0.2" />
+  </ItemGroup>
+
+  <!-- Reference to include the shared Common Project -->
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>
 
 </Project>
