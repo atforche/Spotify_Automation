@@ -1,16 +1,17 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Common.Models;
+﻿namespace Common.Models;
 
 /// <summary>
 /// Model representing response given by local API after ping is sent
 /// </summary>
-public class HandshakeResponse
+public class HandshakeResponse : BaseModel
 {
-	/// <summary>
-	/// A boolean indicating the status of the local API process
-	/// </summary>
-	public bool Status { get; set; } = false;
+	/// <inheritdoc/>
+	protected override string ValidationErrorMessage => "Unable to connect to local API";
+
+    /// <summary>
+    /// A boolean indicating the status of the local API process
+    /// </summary>
+    public bool Status { get; set; } = false;
 
 	/// <summary>
 	/// Randomly generated state string to protect against cross-site request forgery
@@ -28,10 +29,6 @@ public class HandshakeResponse
 		State = state;
 	}
 
-	/// <summary>
-	/// Validates that the given response object is valid
-	/// </summary>
-	/// <param name="response">The StatusResponse object returns by the API</param>
-	/// <returns>True if the response object is valid, false otherwise</returns>
-	public static bool Validate([NotNullWhen(true)] HandshakeResponse? response) => response != null && response.Status;
+	/// <inheritdoc/>
+	public override bool Validate() => Status;
 }

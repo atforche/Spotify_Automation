@@ -10,7 +10,7 @@ namespace Common.Models;
 /// <summary>
 /// Model representing information needed to request a user authorization code from the Spotify API.
 /// </summary>
-public class AuthorizationCodeRequest
+public class AuthorizationCodeRequest : BaseModel
 {
 	/// <summary>
 	/// Client ID for our application
@@ -42,10 +42,9 @@ public class AuthorizationCodeRequest
 	/// </summary>
 	private static string ConfigurationSection = "Spotify";
 
-	/// <summary>
-	/// Logger specific to this class
-	/// </summary>
-	private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+	/// <inheritdoc/>
+	protected override string ValidationErrorMessage => $"Received AuthorizationCodeResponse with the incorrect state. " +
+		$"Expected: {GlobalConstants.State}. Received: {State}.";
 
 	/// <summary>
 	/// Randomly generated state string to protect against cross-site request forgery
@@ -72,42 +71,30 @@ public class AuthorizationCodeRequest
 	/// </summary>
 	/// <param name="client"></param>
 	/// <returns>a valid AuthorizationCodeResponse with the user authentication code, or null if any error occurs</returns>
-	public async Task<AuthorizationCodeResponse?> SendPostRequest(HttpClient client)
+	public async Task<AuthorizationCodeResponse> SendPostRequest(HttpClient client)
     {
-		try
+		// Create the request
+		var request = new HttpRequestMessage(HttpMethod.Post, endPoint);
+
+		// Serialize the request object and add it to the request
+		var json = JsonSerializer.Serialize(this);
+		request.Content = new ByteArrayContent(Encoding.UTF8.GetBytes(json));
+		request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+		// Send the request and wait for a response
+		Logger.Info($"Sending POST request to /{endPoint}. Request state: {State}");
+		HttpResponseMessage response = await client.SendAsync(request);
+		if (!response.IsSuccessStatusCode)
         {
-			// Create the request
-			var request = new HttpRequestMessage(HttpMethod.Post, endPoint);
-
-			// Serialize the request object and add it to the request
-			var json = JsonSerializer.Serialize(this);
-			request.Content = new ByteArrayContent(Encoding.UTF8.GetBytes(json));
-			request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-
-			// Send the request and wait for a response
-			Logger.Info($"Sending POST request to /{endPoint}. Request state: {State}");
-			HttpResponseMessage response = await client.SendAsync(request);
-			if (!response.IsSuccessStatusCode)
-            {
-				Logger.Error($"POST request was unsuccessful. \n Error Code: {response.StatusCode} \n Content: {response.Content.ReadAsStringAsync()}");
-				return null;
-            }
-
-			// Read the response object from the HTTP response
-			var authResponse = await response.Content.ReadFromJsonAsync(typeof(AuthorizationCodeResponse)) as AuthorizationCodeResponse;
-			return authResponse;
+			throw new Exception($"Error sending POST request to endpoint {endPoint}. Status Code: {response.StatusCode}. Body: {response.Content.ReadAsStringAsync()}");
         }
-        catch (Exception error)
-        {
-			Logger.Error(error);
-			return null;
-        }
+
+		// Read the response object from the HTTP response
+		var authResponse = await response.Content.ReadFromJsonAsync(typeof(AuthorizationCodeResponse)) as AuthorizationCodeResponse;
+		authResponse.ValidateOrErrorNull();
+		return authResponse;
     }
 
-	/// <summary>
-	/// Validates that a given request object is valid
-	/// </summary>
-	/// <param name="request">The AuthorizationCodeRequest object passed to the API</param>
-	/// <returns>True if the request object is valid, false otherwise</returns>
-	public static bool Validate(AuthorizationCodeRequest? request, string expectedState) => request != null && request.State == expectedState;
+	/// <inheritdoc/>
+	public override bool Validate() => State == GlobalConstants.State;
 }

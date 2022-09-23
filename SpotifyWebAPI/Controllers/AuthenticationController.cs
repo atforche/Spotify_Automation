@@ -50,7 +50,7 @@ public class AuthenticationController : ControllerBase
         }
 
         // Request an authorization code from the Spotify API
-        responseQueue.Add(new AuthorizationCodeResponse(request.State, "Hello"));
+
 
         // Await the response from Spotify's API
         var response = responseQueue.Take();

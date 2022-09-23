@@ -1,50 +1,45 @@
-﻿using NLog;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 
 namespace Common.Models;
 
 /// <summary>
 /// Model representing information needed ping the local API
 /// </summary>
-public class HandshakeRequest
+public class HandshakeRequest : BaseModel
 {
 	/// <summary>
 	/// API Endpoint 
 	/// </summary>
 	private const string endPoint = $"/handshake";
 
-	/// <summary>
-	/// Logger specific to this class
-	/// </summary>
-	private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+    /// <inheritdoc/>
+    protected override string ValidationErrorMessage => throw new NotImplementedException();
+
+    /// <summary>
+    /// Constructs a StatusRequest object
+    /// </summary>
+    public HandshakeRequest() { }
 
 	/// <summary>
-	/// Constructs a StatusRequest object
+	/// Sends a GET request to the API endpoint for this request. Throws an exception if the GET
+	/// request fails.
 	/// </summary>
-	public HandshakeRequest() { }
-
-	/// <summary>
-	/// Sends a GET request to the API endpoint for this request
-	/// </summary>
-	public async Task<HandshakeResponse?> SendGetRequest(HttpClient client)
+	public async Task<HandshakeResponse> SendGetRequest(HttpClient client)
     {
-		try
-        {
-			// Set the GET request to the local APIs endpoints
-			HttpResponseMessage response = await client.GetAsync(endPoint);
-			if (!response.IsSuccessStatusCode)
-			{
-				return null;
-			}
-
-			// Read the response object from the HTTP response
-			var handshakeResponse = await response.Content.ReadFromJsonAsync(typeof(HandshakeResponse)) as HandshakeResponse;
-			return handshakeResponse;
+		// Set the GET request to the local APIs endpoints
+		Logger.Info($"Sending GET request to /{endPoint}.");
+		HttpResponseMessage response = await client.GetAsync(endPoint);
+		if (!response.IsSuccessStatusCode)
+		{
+			throw new Exception($"Error sending GET request to endpoint {endPoint}. Status Code: {response.StatusCode}. Body: {response.Content.ReadAsStringAsync()}");
 		}
-		catch (Exception error)
-        {
-			Logger.Error(error);
-			return null;
-        }
+
+		// Read the response object from the HTTP response
+		var handshakeResponse = await response.Content.ReadFromJsonAsync(typeof(HandshakeResponse)) as HandshakeResponse;
+		handshakeResponse.ValidateOrErrorNull();
+		return handshakeResponse;
     }
+
+	/// <inheritdoc/>
+	public override bool Validate() => true;
 }

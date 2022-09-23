@@ -67,32 +67,14 @@ public static class Program
     /// </summary>
     public static async Task<int> ConnectToSpotifyApi()
     {
-        // Verify that the local API is up and running
+        // Verify that the local API is up and running and save the random state from the API
         var statusRequest = new HandshakeRequest();
-        HandshakeResponse? handshakeResponse = await statusRequest.SendGetRequest(client);
-        if (!HandshakeResponse.Validate(handshakeResponse))
-        {
-            var exception = new Exception("Unable to connect to local API");
-            Logger.Error(exception);
-            throw exception;
-        }
-
-        // Store the random state established in the initial handshake with the API
+        HandshakeResponse handshakeResponse = await statusRequest.SendGetRequest(client);
         GlobalConstants.State = handshakeResponse.State;
 
         // Send our connection request to the Spotify API
         var authRequest = new AuthorizationCodeRequest();
         AuthorizationCodeResponse? authResponse = await authRequest.SendPostRequest(client);
-
-        // Verify that we got a valid response back from the API
-        if (!AuthorizationCodeResponse.Validate(authResponse, GlobalConstants.State))
-        {
-            var exception = new Exception($"Invalid response received. Request state: {authRequest.State}");
-            Logger.Error(exception);
-            throw exception;
-        }
-
-        Console.WriteLine(authResponse.UserAuthorizationCode);
 
         // Log our success and store the authorization code
         Logger.Info($"User authorization code received. Response state: {authResponse.State}");

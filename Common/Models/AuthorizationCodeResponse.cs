@@ -1,16 +1,18 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Common.Models;
+﻿namespace Common.Models;
 
 /// <summary>
 /// Model representing the information that Spotify's API will repond with after requesting a user authorization code
 /// </summary>
-public class AuthorizationCodeResponse
+public class AuthorizationCodeResponse : BaseModel
 {
-	/// <summary>
-	/// String from the Spotify API that can be used to get an access token for the users account
-	/// </summary>
-	public string? UserAuthorizationCode { get; }
+    /// <inheritdoc/>
+    protected override string ValidationErrorMessage => $"Received AuthorizationCodeResponse with the incorrect state. " +
+        $"Expected: {GlobalConstants.State}. Received: {State}.";
+
+    /// <summary>
+    /// String from the Spotify API that can be used to get an access token for the users account
+    /// </summary>
+    public string? UserAuthorizationCode { get; }
 
 	/// <summary>
 	/// String from the Spotify API that specifies what type of error occurred when requesting authorization
@@ -35,11 +37,6 @@ public class AuthorizationCodeResponse
 		Error = error;
 	}
 
-	/// <summary>
-	/// Validates that a given response object is valid
-	/// </summary>
-	/// <param name="response">The AuthorizationCodeResponse object returned by the API</param>
-	/// <param name="expectedState">The random state string expected by this request</param>
-	/// <returns>True if the response object is valid, false otherwise</returns>
-	public static bool Validate([NotNullWhen(true)] AuthorizationCodeResponse? response, string expectedState) => response != null && response.State == expectedState;
+	/// <inheritdoc/>
+	public override bool Validate() => State == GlobalConstants.State;
 }
