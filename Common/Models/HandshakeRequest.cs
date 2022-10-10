@@ -12,8 +12,8 @@ public class HandshakeRequest : BaseModel
 	/// </summary>
 	private const string endPoint = $"/handshake";
 
-    /// <inheritdoc/>
-    protected override string ValidationErrorMessage => throw new NotImplementedException();
+	/// <inheritdoc/>
+	public override string ValidationErrorMessage => throw new NotImplementedException();
 
     /// <summary>
     /// Constructs a StatusRequest object
@@ -41,5 +41,5 @@ public class HandshakeRequest : BaseModel
     }
 
 	/// <inheritdoc/>
-	public override bool Validate() => true;
+	protected override bool ValidatePrivate() => true;
 }

@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using NLog;
 using System.Collections.Concurrent;
-using System.Net.Http;
 
 using Common;
 using Common.Models;
@@ -43,9 +42,8 @@ public class AuthenticationController : ControllerBase
     {
         // Verify that the request object received is valid
         Logger.Info($"Received an Authorization Code Request with state: '{request.State}'");
-        if (!AuthorizationCodeRequest.Validate(request, GlobalConstants.State))
+        if (!request.TryValidate())
         {
-            Logger.Error($"Received request with incorrect random state. Expected: {GlobalConstants.State}. Received: {request.State}.");
             return new EmptyResult();
         }
 
@@ -69,9 +67,9 @@ public class AuthenticationController : ControllerBase
     {
         if (state != GlobalConstants.State)
         {
-            var exception = new Exception($"Invalid response received. Received state: {state}");
+            var exception = new Exception($"Received Spotify response with the incorrect state. " +
+                $"Expected: {GlobalConstants.State}. Received: {state}.");
             Logger.Error(exception);
-            throw exception;
         }
 
         if (error != null)

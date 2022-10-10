@@ -5,8 +5,8 @@
 /// </summary>
 public class AuthorizationCodeResponse : BaseModel
 {
-    /// <inheritdoc/>
-    protected override string ValidationErrorMessage => $"Received AuthorizationCodeResponse with the incorrect state. " +
+	/// <inheritdoc/>
+	public override string ValidationErrorMessage => $"Received AuthorizationCodeResponse with the incorrect state. " +
         $"Expected: {GlobalConstants.State}. Received: {State}.";
 
     /// <summary>
@@ -38,5 +38,5 @@ public class AuthorizationCodeResponse : BaseModel
 	}
 
 	/// <inheritdoc/>
-	public override bool Validate() => State == GlobalConstants.State;
+	protected override bool ValidatePrivate() => State == GlobalConstants.State;
 }

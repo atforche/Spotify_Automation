@@ -6,7 +6,7 @@
 public class HandshakeResponse : BaseModel
 {
 	/// <inheritdoc/>
-	protected override string ValidationErrorMessage => "Unable to connect to local API";
+	public override string ValidationErrorMessage => "Unable to connect to local API";
 
     /// <summary>
     /// A boolean indicating the status of the local API process
@@ -30,5 +30,5 @@ public class HandshakeResponse : BaseModel
 	}
 
 	/// <inheritdoc/>
-	public override bool Validate() => Status;
+	protected override bool ValidatePrivate() => Status;
 }

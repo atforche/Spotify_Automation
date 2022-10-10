@@ -43,7 +43,7 @@ public class AuthorizationCodeRequest : BaseModel
 	private static string ConfigurationSection = "Spotify";
 
 	/// <inheritdoc/>
-	protected override string ValidationErrorMessage => $"Received AuthorizationCodeResponse with the incorrect state. " +
+	public override string ValidationErrorMessage => $"Received AuthorizationCodeResponse with the incorrect state. " +
 		$"Expected: {GlobalConstants.State}. Received: {State}.";
 
 	/// <summary>
@@ -96,5 +96,5 @@ public class AuthorizationCodeRequest : BaseModel
     }
 
 	/// <inheritdoc/>
-	public override bool Validate() => State == GlobalConstants.State;
+	protected override bool ValidatePrivate() => State == GlobalConstants.State;
 }
