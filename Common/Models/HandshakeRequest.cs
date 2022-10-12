@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Json;
+using System.Text.Json.Serialization;
 
 namespace Common.Models;
 
@@ -13,6 +14,7 @@ public class HandshakeRequest : BaseModel
 	private const string endPoint = $"/handshake";
 
 	/// <inheritdoc/>
+	[JsonIgnore]
 	public override string ValidationErrorMessage => throw new NotImplementedException();
 
     /// <summary>

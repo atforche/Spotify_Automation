@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
 
@@ -8,11 +8,11 @@
     <Nullable>enable</Nullable>
 
     <!-- ID for .NET User Secrets -->
-    <UserSecretsId>52f12033-1354-4a28-8539-7fa4811e8ea7</UserSecretsId>
+    <UserSecretsId>9757119e-3a82-42b7-b6a3-6ebd71778ea8</UserSecretsId>
 
     <!-- Prevents our NLog.Config content item from being included twice -->
     <EnableDefaultContentItems>false</EnableDefaultContentItems>
-    
+
   </PropertyGroup>
 
   <!-- Remove any existing NLog.config content from the build directory -->

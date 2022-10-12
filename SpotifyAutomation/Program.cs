@@ -47,6 +47,12 @@ public static class Program
     /// </summary>
     public static void LaunchAPI()
     {
+        // Ensure that we don't already have an API process running
+        foreach (var process in Process.GetProcessesByName("SpotifyWebAPI"))
+        {
+            process.Kill();
+        }
+
         // Start up the API
         var startInfo = new ProcessStartInfo();
         startInfo.FileName = $"{GlobalConstants.ApiExeDirectory}\\{GlobalConstants.ApiProjectName}.exe";
@@ -78,6 +84,7 @@ public static class Program
 
         // Log our success and store the authorization code
         Logger.Info($"User authorization code received. Response state: {authResponse.State}");
+        Console.WriteLine($"User authorization code: {authResponse.UserAuthorizationCode}");
         return 0;
     }
 

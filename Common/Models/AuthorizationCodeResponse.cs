@@ -1,4 +1,6 @@
-﻿namespace Common.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace Common.Models;
 
 /// <summary>
 /// Model representing the information that Spotify's API will repond with after requesting a user authorization code
@@ -6,6 +8,7 @@
 public class AuthorizationCodeResponse : BaseModel
 {
 	/// <inheritdoc/>
+	[JsonIgnore]
 	public override string ValidationErrorMessage => $"Received AuthorizationCodeResponse with the incorrect state. " +
         $"Expected: {GlobalConstants.State}. Received: {State}.";
 

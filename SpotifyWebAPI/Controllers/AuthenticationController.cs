@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using NLog;
+using System.Diagnostics;
 using System.Collections.Concurrent;
 
 using Common;
@@ -48,12 +49,15 @@ public class AuthenticationController : ControllerBase
         }
 
         // Request an authorization code from the Spotify API
-
+        var webProcess = new Process();
+        webProcess.StartInfo.UseShellExecute = true;
+        webProcess.StartInfo.FileName = request.spotifyEndPoint;
+        webProcess.Start();
 
         // Await the response from Spotify's API
         var response = responseQueue.Take();
         Logger.Info($"Received an Authorization Code Response with state: '{response.State}'");
-        return new AuthorizationCodeResponse(request.State, "Hello");
+        return response;
     }
 
     /// <summary>
@@ -65,11 +69,10 @@ public class AuthenticationController : ControllerBase
     [HttpGet("/authorize/authTokenResponse")]
     public void ProcessSpotifyCallback(string? code, string? error, string state)
     {
-        if (state != GlobalConstants.State)
+        var response = new AuthorizationCodeResponse(state, error: error);
+        if (!response.TryValidate())
         {
-            var exception = new Exception($"Received Spotify response with the incorrect state. " +
-                $"Expected: {GlobalConstants.State}. Received: {state}.");
-            Logger.Error(exception);
+            responseQueue.Add(new AuthorizationCodeResponse(state, response.ValidationErrorMessage));
         }
 
         if (error != null)

@@ -4,6 +4,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Common.Models;
 
@@ -12,15 +13,21 @@ namespace Common.Models;
 /// </summary>
 public class AuthorizationCodeRequest : BaseModel
 {
-	/// <summary>
-	/// Client ID for our application
-	/// </summary>
-	private string ClientId { get; set; } = "";
+    /// <summary>
+    /// Client ID for our application
+    /// </summary>
+	[JsonIgnore]
+	public string ClientId { get; set; } = "";
 
 	/// <summary>
 	/// Local API Endpoint
 	/// </summary>
 	private static string endPoint = $"/authorize";
+
+	/// <summary>
+	/// Spotify API endpoint to request an Authorization Code
+	/// </summary>
+	public string spotifyEndPoint => $"https://accounts.spotify.com/authorize?response_type={ResponseType}&client_id={ClientId}&scope={Scope}&redirect_uri={RedirectUri}&state={State}";
 
 	/// <summary>
 	/// Response type to get from the Spotify API
@@ -40,9 +47,10 @@ public class AuthorizationCodeRequest : BaseModel
 	/// <summary>
 	/// Section of the model in the User Secrets JSON dictionary
 	/// </summary>
-	private static string ConfigurationSection = "Spotify";
+	private static string ConfigurationKey = "Spotify";
 
 	/// <inheritdoc/>
+	[JsonIgnore]
 	public override string ValidationErrorMessage => $"Received AuthorizationCodeResponse with the incorrect state. " +
 		$"Expected: {GlobalConstants.State}. Received: {State}.";
 
@@ -63,7 +71,7 @@ public class AuthorizationCodeRequest : BaseModel
 		var builder = new ConfigurationBuilder();
 		builder.AddUserSecrets<AuthorizationCodeRequest>();
 		var configuration = builder.Build();
-		ConfigurationBinder.Bind(configuration, ConfigurationSection, this);
+		ConfigurationBinder.Bind(configuration, ConfigurationKey, this);
     }
 
 	/// <summary>
@@ -96,5 +104,5 @@ public class AuthorizationCodeRequest : BaseModel
     }
 
 	/// <inheritdoc/>
-	protected override bool ValidatePrivate() => State == GlobalConstants.State;
+	protected override bool ValidatePrivate() => State == GlobalConstants.State && ClientId != "";
 }

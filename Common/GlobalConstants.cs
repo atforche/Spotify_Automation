@@ -23,7 +23,7 @@ public static class GlobalConstants
     /// <summary>
     /// Full URL where the API can be reached
     /// </summary>
-    public static string BaseApiUrl => $"http://localhost:{BaseApiPort}";
+    public static string BaseApiUrl => $"https://localhost:{BaseApiPort}";
 
     /// <summary>
     /// Configuration the application is running in. Determines where certain files are located

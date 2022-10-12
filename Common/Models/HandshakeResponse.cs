@@ -1,4 +1,6 @@
-﻿namespace Common.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace Common.Models;
 
 /// <summary>
 /// Model representing response given by local API after ping is sent
@@ -6,6 +8,7 @@
 public class HandshakeResponse : BaseModel
 {
 	/// <inheritdoc/>
+	[JsonIgnore]
 	public override string ValidationErrorMessage => "Unable to connect to local API";
 
     /// <summary>
